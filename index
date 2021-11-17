@@ -1,0 +1,27 @@
+<html>
+  <body>
+    <a href="https://www.google.com" target="_blank" onclick="countClick('google')">Google</a>
+    <a href="https://www.duckduckgo.com" target="_blank" onclick="countClick('duckduckgo')">DuckDuckGo</a>
+
+    <div>Google was clicked <span id="google_clicks">0</span> times.</div>
+    <div>DuckDuckGo was clicked <span id="duckduckgo_clicks">0</span> times.</div>
+    
+    <script>
+      const requestHandler = async function(type, key) {
+        return await fetch(`https://api.countapi.xyz/${type}/rugflipper/${key}`)
+        .then(res => res.json())
+        .then(res => res.value || 0)
+        .catch(() => 0)
+      }
+
+      const loadClicks = (async function() {
+        document.getElementById('google_clicks').innerHTML = await requestHandler('get', 'google')
+        document.getElementById('duckduckgo_clicks').innerHTML = await requestHandler('get', 'duckduckgo')
+      })()
+
+      const countClick = async function(key) {
+        document.getElementById(`${key}_clicks`).innerHTML = await requestHandler('hit', key)
+      }
+    </script>
+  </body>
+</html>
